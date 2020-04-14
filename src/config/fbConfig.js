@@ -4,7 +4,7 @@ import 'firebase/auth'
 
 
 var firebaseConfig = {
-    apiKey: "AIzaSyBHcRtpuhgK3aTpUwkyw9n_ZvPVzpBRnvE",
+    apiKey: "",
     authDomain: "lithub-aab3a.firebaseapp.com",
     databaseURL: "https://lithub-aab3a.firebaseio.com",
     projectId: "lithub-aab3a",
