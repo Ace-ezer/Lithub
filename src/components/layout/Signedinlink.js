@@ -6,7 +6,7 @@ import { signOut } from '../../store/actions/authActions'
 
 const SignedInLinks = (props) => {
 
-    console.log(props.profile.initials)
+    //console.log(props.profile.initials)
 
     return (
          <ul className="right">
