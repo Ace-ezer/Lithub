@@ -1,48 +1,52 @@
-export const signIn = (credentials) => {
-    return (dispatch, getState, {getFirebase}) => {
+export const signIn = (credentials) => async (dispatch, getState, {getFirebase}) => {
         const firebase = getFirebase()
+        
+        try {
+            await firebase.auth().signInWithEmailAndPassword(
+                credentials.email,
+                credentials.password
+            )
 
-        firebase.auth().signInWithEmailAndPassword(
-            credentials.email,
-            credentials.password
-        ).then(() => {
-            dispatch({
-                type: 'LOGIN_SUCCESS'
-            })
-        }).catch(err => {
+            dispatch({ type: 'LOGIN_SUCCESS'})
+
+        } catch (err) {
             dispatch({ type: 'LOGIN_ERROR', err })
-        })
+        }
     }
-}
 
-export const signOut = () => {
-    return (dispatch, getState, { getFirebase }) => {
+export const signOut = () => async (dispatch, getState, { getFirebase }) => {
         const firebase = getFirebase()
 
-        firebase.auth().signOut().then(() => {
-            dispatch({ type: 'SIGNOUT_SUCCESS' })
-        })
-    }
-}
+        try {
+            await firebase.auth().signOut()
 
-export const signUp = (newUser) => {
-    return (dispatch, getState, { getFirebase, getFirestore })  => {
+            dispatch({ type: 'SIGNOUT_SUCCESS' })
+
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+
+export const signUp = (newUser) => async (dispatch, getState, { getFirebase, getFirestore })  => {
         const firebase = getFirebase()
         const firstore = getFirestore()
 
-        firebase.auth().createUserWithEmailAndPassword(
-            newUser.email,
-            newUser.password
-        ).then((res) => {
-            return firstore.collection('users').doc(res.user.uid).set({
-                firstName: newUser.firstName,
-                lastName: newUser.lastName,
-                initials: newUser.firstName[0]+newUser.lastName[0]
-            })
-        }).then(() => {
-            dispatch({ type: 'SIGNUP_SUCCESS'})
-        }).catch(err => {
+        try {
+            const res = await firebase.auth().createUserWithEmailAndPassword(
+                    newUser.email,
+                    newUser.password
+                )
+            
+            await firstore.collection('users').doc(res.user.uid).set({
+                    firstName: newUser.firstName,
+                    lastName: newUser.lastName,
+                    initials: newUser.firstName[0]+newUser.lastName[0]
+            })                
+
+            dispatch({ type: 'SIGNUP_SUCCESS'})    
+
+        } catch (err) {
             dispatch({ type: 'SIGNUP_ERROR', err})
-        })
+        }
     }
-}
