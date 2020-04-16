@@ -1,4 +1,4 @@
-export const signIn = (credentials) => async (dispatch, getState, {getFirebase}) => {
+export const signIn = (credentials) => async (dispatch, getState, { getFirebase }) => {
         const firebase = getFirebase()
         
         try {
@@ -28,9 +28,9 @@ export const signOut = () => async (dispatch, getState, { getFirebase }) => {
     }
 
 
-export const signUp = (newUser) => async (dispatch, getState, { getFirebase, getFirestore })  => {
+export const signUp = (newUser) => async (dispatch, getState, { getFirebase })  => {
         const firebase = getFirebase()
-        const firstore = getFirestore()
+        const firstore = firebase.firestore()
 
         try {
             const res = await firebase.auth().createUserWithEmailAndPassword(

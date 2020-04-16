@@ -6,33 +6,64 @@ import * as serviceWorker from './serviceWorker';
 // Creating Redux Store
 import { createStore, applyMiddleware, compose } from 'redux';
 import rootReducer from './store/reducers/rootReducer';
-import { Provider } from 'react-redux';
+import { Provider, useSelector } from 'react-redux';
 import thunk from 'redux-thunk';
 // For firebase
-import { reduxFirestore, getFirestore } from 'redux-firestore'
-import { reactReduxFirebase, getFirebase } from 'react-redux-firebase'
+import { createFirestoreInstance, getFirestore } from 'redux-firestore'
+import { isLoaded, getFirebase, ReactReduxFirebaseProvider } from 'react-redux-firebase'
 import fbConfig from './config/fbConfig'
 
 const store = createStore(
   rootReducer, 
   compose(
-    applyMiddleware(thunk.withExtraArgument({getFirebase, getFirestore})),
-      reduxFirestore(fbConfig),
-      reactReduxFirebase (fbConfig, { useFirestoreForProfile: true, userProfile: 'users', attachAuthIsReady: true })
+    applyMiddleware(thunk.withExtraArgument({getFirebase, getFirestore}))
   )
 );
 
-store.firebaseAuthIsReady.then(() => {
-  ReactDOM.render(
-    //<React.StrictMode>
-      <Provider store={store}>
-        <App />
-      </Provider>,
-    //</React.StrictMode>,
-    document.getElementById('root')
-  );
+const rrfConfig = {
+  useFirestoreForProfile: true, 
+  userProfile: 'users'
+}
 
-  serviceWorker.unregister();
-})
+const rrfProps = {
+  firebase: fbConfig,
+  config: rrfConfig,
+  dispatch: store.dispatch,
+  createFirestoreInstance: createFirestoreInstance
+}
 
+const AuthIsLoaded = ({ children }) => {
+  const auth = useSelector(state => state.firebase.auth)
+  if (!isLoaded(auth)) return (
+    <div className="center">
+      <div className="preloader-wrapper big active">
+        <div className="spinner-layer spinner-blue">
+          <div className="circle-clipper left">
+            <div className="circle"></div>
+          </div><div className="gap-patch">
+            <div className="circle"></div>
+          </div><div className="circle-clipper right">
+            <div className="circle"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 
+  return children
+}
+
+ReactDOM.render(
+  //<React.StrictMode>
+    <Provider store={store}>
+      <ReactReduxFirebaseProvider {...rrfProps} >
+        <AuthIsLoaded>
+          <App />
+        </AuthIsLoaded>
+      </ReactReduxFirebaseProvider>
+    </Provider>,
+  //</React.StrictMode>,
+  document.getElementById('root')
+);
+
+serviceWorker.unregister();

@@ -1,11 +1,12 @@
 const createProject = (project) => async (
     dispatch, 
     getState, 
-    { getFirebase, getFirestore }
+    { getFirebase }
     
     ) => {
 
-        const firestore = getFirestore()
+        const firebase = getFirebase()
+        const firestore =  firebase.firestore()
         const profile = getState().firebase.profile
         const authorId = getState().firebase.auth.uid
 
