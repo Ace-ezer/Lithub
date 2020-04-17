@@ -4,12 +4,12 @@ import { firestoreConnect }  from 'react-redux-firebase'
 import { compose } from 'redux'
 import { Redirect } from 'react-router-dom'
 import moment from 'moment'
-import { deleteProject, like } from '../../store/actions/projectActions'
+import { deleteProject, likeUnlike } from '../../store/actions/projectActions'
 
 function ProjectDetails(props) {
 
     //const id = props.match.params.id
-    const { id, project, auth, deleteProject, like, likedBy } = props;
+    const { id, project, auth, deleteProject, likeUnlike, liked } = props;
 
     if(!auth.uid)
         return (<Redirect to='/signin' />)    
@@ -22,7 +22,7 @@ function ProjectDetails(props) {
     }
 
     const handleLike = () => {
-        like(id)
+        likeUnlike(id, liked)
     }
     
     const deleteButton = project && auth.uid === project.authorId? (
@@ -40,9 +40,9 @@ function ProjectDetails(props) {
             <button 
             className="waves-effect waves-light btn pink lighten-1 right"
             onClick={handleLike}
-            disabled={likedBy? Boolean(likedBy.indexOf(auth.uid)+1): false}
             >
-            <i className="material-icons right">thumb_up</i>Like
+            <i className="material-icons right">thumb_up</i>
+                { liked ? (<span>Unlike</span> ) : (<span>Like</span>) }
             </button>
         </span>
     ) : (null)
@@ -87,19 +87,20 @@ const mapStateToProps = (state, ownProps) => {
     const projects = state.firestore.data.project
     const project = projects ? projects[id]: undefined
     const likedBy = project ? project.likedBy: undefined
+    const liked = likedBy ? Boolean(likedBy.indexOf(state.firebase.auth.uid)+1) : false
     
     return {
         id: id,
         project: project,
         auth: state.firebase.auth,
-        likedBy: likedBy
+        liked: liked
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
         deleteProject: projectId => dispatch(deleteProject(projectId)),
-        like: projectId => dispatch(like(projectId))
+        likeUnlike: (projectId, liked) => dispatch(likeUnlike(projectId, liked))
     }
 }
 

@@ -17,7 +17,10 @@ const projectReducer = (state = initState, action) => {
             return state;
         case 'LIKE_ADDED':
             console.log('like added')
-            return state;    
+            return state;
+        case 'UNLIKED':
+            console.log('unliked')
+            return state;        
         case 'CREATE_PROJECT_ERROR:':
         case 'DELETE_FAILURE':    
             console.log("Project Error ", action.err)

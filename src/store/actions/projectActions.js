@@ -45,7 +45,7 @@ export const deleteProject = (projectId) => async (
         }
     }
     
-export const like = (projectId) => async (
+export const likeUnlike = (projectId, liked) => async (
     dispatch, 
     getState, 
     { getFirebase }
@@ -57,11 +57,19 @@ export const like = (projectId) => async (
         try {
             const project = await firestore.collection('project').doc(projectId)
             
-            await project.update({
-                likedBy: firebase.firestore.FieldValue.arrayUnion(userId)
-            })
-
-            dispatch({ type: "LIKE_ADDED" })
+            if(!liked) {
+                await project.update({
+                    likedBy: firebase.firestore.FieldValue.arrayUnion(userId)
+                })
+    
+                dispatch({ type: "LIKE_ADDED" })
+            } else {
+                await project.update({
+                    likedBy: firebase.firestore.FieldValue.arrayRemove(userId)
+                })
+    
+                dispatch({ type: "UNLIKED" })
+            }
 
         } catch (err) {
             dispatch({ type: "LIKE_ERROR", err })
