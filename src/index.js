@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import Loader from './components/assests/Loader'
 // Creating Redux Store
 import { createStore, applyMiddleware, compose } from 'redux';
 import rootReducer from './store/reducers/rootReducer';
@@ -35,20 +36,9 @@ const rrfProps = {
 
 const AuthIsLoaded = ({ children }) => {
   const auth = useSelector(state => state.firebase.auth)
+
   if (!isLoaded(auth)) return (
-    <div className="center">
-      <div className="preloader-wrapper big active">
-        <div className="spinner-layer spinner-blue">
-          <div className="circle-clipper left">
-            <div className="circle"></div>
-          </div><div className="gap-patch">
-            <div className="circle"></div>
-          </div><div className="circle-clipper right">
-            <div className="circle"></div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Loader />
   )
 
   return children

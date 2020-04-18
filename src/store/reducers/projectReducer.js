@@ -1,5 +1,5 @@
 const initState = {
-    editEnable: false
+
 }
 
 const projectReducer = (state = initState, action) => {
@@ -10,17 +10,11 @@ const projectReducer = (state = initState, action) => {
             return state;
         case 'DELETE_SUCCESS':
             console.log('Project deleted')
-            return state;
-        case 'EDIT_TOGGLE':
-            return {
-                ...state,
-                editEnable: !action.payload
-            };      
+            return state;     
         case 'EDIT_PROJECT':
-            console.log('project edited')
+            console.log('project edited') 
             return {
-                ...state,
-                editEnable: !action.payload
+                ...state
             };
         case 'LIKE_ADDED':
             console.log('like added')

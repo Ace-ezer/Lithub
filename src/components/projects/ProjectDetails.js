@@ -1,21 +1,21 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { firestoreConnect }  from 'react-redux-firebase'
 import { compose } from 'redux'
 import { Redirect } from 'react-router-dom'
 import moment from 'moment'
-import { deleteProject, likeUnlike, toggleEdit, saveEdit } from '../../store/actions/projectActions'
+import { deleteProject, likeUnlike, saveEdit } from '../../store/actions/projectActions'
 import { LikeButton, DeleteButton, EditButton } from '../layout/Buttons'
 import EditProject from './EditProject'
 
 function ProjectDetails({ pid, project, 
         auth, deleteProject, 
         likeUnlike, liked, 
-        editEnable, toggleEdit,
         saveEdit 
     }) {
 
     //const id = props.match.params.id
+    const [editEnable, setEditEnable] = useState(false)
 
     if(!auth.uid)
         return (<Redirect to='/signin' />)    
@@ -28,16 +28,17 @@ function ProjectDetails({ pid, project,
         <LikeButton pid={pid} liked={liked} likeUnlike={likeUnlike}/> ) : (null)
 
     const editButton = project && auth.uid === project.authorId? (
-       <EditButton editEnable={editEnable} toggleEdit={toggleEdit} /> 
+       <EditButton editEnable={editEnable} setEditEnable={setEditEnable} /> 
     ) : (null)
 
-    const content = project && !editEnable ? <p>{project.content}</p> : (
+    const content = project && editEnable && auth.uid === project.authorId? (
         <EditProject pid={pid} 
             prevContent={project? project.content : null}
             editEnable={editEnable}
+            setEditEnable={setEditEnable}
             saveEdit={saveEdit}
         />
-    )
+    ) : (<p>{project? project.content: null}</p>)
 
     const display = project ? (
         <div className="container section project-details">
@@ -88,8 +89,7 @@ const mapStateToProps = (state, ownProps) => {
         pid: pid,
         project: project,
         auth: state.firebase.auth,
-        liked: liked,
-        editEnable: state.project.editEnable
+        liked: liked
     }
 }
 
@@ -97,8 +97,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         deleteProject: projectId => dispatch(deleteProject(projectId)),
         likeUnlike: (projectId, liked) => dispatch(likeUnlike(projectId, liked)),
-        toggleEdit: value => dispatch(toggleEdit(value)),
-        saveEdit: (projectId, content, value) => dispatch(saveEdit(projectId, content, value))
+        saveEdit: (projectId, content) => dispatch(saveEdit(projectId, content))
     }
 }
 

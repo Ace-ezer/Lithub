@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Notification from './Notification'
 import ProjectList from '../projects/ProjectList'
 import { Redirect } from 'react-router-dom'
-
+import Loader from '../assests/Loader'
 // Connect to Redux store
 import { connect } from 'react-redux'
 import { firestoreConnect } from 'react-redux-firebase'
@@ -14,9 +14,9 @@ class Dashboard extends Component {
         const { projects, auth, notifications } = this.props
 
         if(!auth.uid)
-            return (<Redirect to='/signin' />)    
-
-        return (
+            return (<Redirect to='/signin' />)  
+    
+        const dashboard =  true ? (
             <div className="dashboard container">
                 <div className="row">
                     <div className="col s12 m6">
@@ -27,7 +27,9 @@ class Dashboard extends Component {
                     </div>
                 </div>
             </div>
-        )
+        ): ( <Loader />)    
+
+        return dashboard 
     }
 }
 
@@ -43,6 +45,6 @@ export default compose(
     connect(mapStateToProps), 
     firestoreConnect(() => [
         {collection: 'project', orderBy: ['createdAt', 'desc']},
-        {collection: 'notifications', limit: 4, orderBy: ['time', 'desc']}
+        {collection: 'notifications', limit: 10, orderBy: ['time', 'desc']}
     ])
     )(Dashboard)

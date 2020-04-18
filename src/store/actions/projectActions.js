@@ -43,12 +43,9 @@ export const deleteProject = (projectId) => async (
             dispatch({ type: 'DELETE_FAILURE', err })
         }
     }
-    
-export const toggleEdit = (value) => async (dispatch) => {
-    dispatch({ type: 'EDIT_TOGGLE', payload: value })
-}
 
-export const saveEdit = (pid, content, value) => async (dispatch, getState, { getFirebase }) => {
+
+export const saveEdit = (pid, content) => async (dispatch, getState, { getFirebase }) => {
         
         const firebase = getFirebase()
         const firestore =  firebase.firestore()
@@ -58,7 +55,7 @@ export const saveEdit = (pid, content, value) => async (dispatch, getState, { ge
                     content: content,
                     createdAt: new Date()
                 })
-            dispatch({ type: 'EDIT_PROJECT', payload: value})   
+            dispatch({ type: 'EDIT_PROJECT' })   
 
         } catch(err) {
             dispatch({ type: 'EDIT_ERROR',  err})

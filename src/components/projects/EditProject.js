@@ -1,18 +1,17 @@
 import React, { useState } from 'react'
 
-const EditProject = ({ pid, prevContent, editEnable, saveEdit}) => {
+const EditProject = ({ pid, prevContent, editEnable, setEditEnable, saveEdit}) => {
 
     const [content, setState] = useState(prevContent)
-
-    console.log(prevContent)
 
     const handleChange = (e) => {
         setState(e.target.value)
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e) => { 
         e.preventDefault()
-        saveEdit(pid, content, editEnable)
+        saveEdit(pid, content)
+        setEditEnable(!editEnable)
     }
 
     return (
