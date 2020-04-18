@@ -2,7 +2,6 @@ export const createProject = (project) => async (
     dispatch, 
     getState, 
     { getFirebase }
-    
     ) => {
 
         const firebase = getFirebase()
@@ -45,6 +44,27 @@ export const deleteProject = (projectId) => async (
         }
     }
     
+export const toggleEdit = (value) => async (dispatch) => {
+    dispatch({ type: 'EDIT_TOGGLE', payload: value })
+}
+
+export const saveEdit = (pid, content, value) => async (dispatch, getState, { getFirebase }) => {
+        
+        const firebase = getFirebase()
+        const firestore =  firebase.firestore()
+
+        try {
+            await firestore.collection('project').doc(pid).update({
+                    content: content,
+                    createdAt: new Date()
+                })
+            dispatch({ type: 'EDIT_PROJECT', payload: value})   
+
+        } catch(err) {
+            dispatch({ type: 'EDIT_ERROR',  err})
+        }
+}
+
 export const likeUnlike = (projectId, liked) => async (
     dispatch, 
     getState, 

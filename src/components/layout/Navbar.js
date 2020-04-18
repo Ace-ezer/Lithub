@@ -7,13 +7,13 @@ import { connect } from 'react-redux'
 const Navbar = (props) => {
 
     const { auth, profile } = props
-    const links = auth.uid ? <SignedInLinks profile={profile}/> : <SignedOutLinks />
+    const links = auth.uid ? <SignedInLinks auth={auth} profile={profile}/> : <SignedOutLinks />
     return (
         <div className="navbar-fixed">
             <nav className="nav-wrapper grey darken-3">
                 <div className="container">
                     <Link to='/' className="brand-logo">LitHub</Link>
-                    {links}
+                    {links} 
                 </div>
             </nav> 
         </div> 

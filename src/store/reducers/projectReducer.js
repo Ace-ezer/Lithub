@@ -1,9 +1,5 @@
 const initState = {
-    projects: [
-        {id: '1', title: 'title-1', content: 'lorem epsum'},
-        {id: '2', title: 'title-2', content: 'lorem epsum'},
-        {id: '3', title: 'title-3', content: 'lorem epsum'}
-    ]
+    editEnable: false
 }
 
 const projectReducer = (state = initState, action) => {
@@ -15,6 +11,17 @@ const projectReducer = (state = initState, action) => {
         case 'DELETE_SUCCESS':
             console.log('Project deleted')
             return state;
+        case 'EDIT_TOGGLE':
+            return {
+                ...state,
+                editEnable: !action.payload
+            };      
+        case 'EDIT_PROJECT':
+            console.log('project edited')
+            return {
+                ...state,
+                editEnable: !action.payload
+            };
         case 'LIKE_ADDED':
             console.log('like added')
             return state;
@@ -22,8 +29,9 @@ const projectReducer = (state = initState, action) => {
             console.log('unliked')
             return state;        
         case 'CREATE_PROJECT_ERROR:':
-        case 'DELETE_FAILURE':    
-            console.log("Project Error ", action.err)
+        case 'DELETE_FAILURE':
+        case 'EDIT_ERROR':        
+            console.log("Error ", action.err)
             return state;
         case 'LIKE_ERROR':
             console.log('like error', action.err)

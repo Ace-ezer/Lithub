@@ -16,7 +16,8 @@ import fbConfig from './config/fbConfig'
 const store = createStore(
   rootReducer, 
   compose(
-    applyMiddleware(thunk.withExtraArgument({getFirebase, getFirestore}))
+    applyMiddleware(thunk.withExtraArgument({getFirebase, getFirestore})),
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
   )
 );
 
