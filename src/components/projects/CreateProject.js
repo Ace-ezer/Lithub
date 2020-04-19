@@ -14,6 +14,7 @@ class CreateProject extends Component {
         e.preventDefault()
         this.props.createProject(this.state)
         this.props.history.push('/')
+        window.location.reload()
     }
 
     handleChange = (e) => {
@@ -62,3 +63,4 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateProject)
+

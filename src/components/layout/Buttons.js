@@ -37,8 +37,8 @@ export const DeleteButton = ({ pid, deleteProject}) => {
     )
 }
 
-export const EditButton = ({ editEnable, setEditEnable}) => {
-
+export const EditButton = ({ editEnable, setEditEnable }) => {
+   
     const handleEdit = () => {
         //console.log("Edit me", editEnable)
         setEditEnable(!editEnable)
